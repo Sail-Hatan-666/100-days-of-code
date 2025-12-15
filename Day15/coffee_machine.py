@@ -14,7 +14,7 @@ def admin_panel(machine_state):
             ).lower()
 
             if admin_input == "off":
-                machine_off(machine_state)
+               machine_state = False
 
             if admin_input == "resources":
                 get_resources()
@@ -24,9 +24,8 @@ def admin_panel(machine_state):
         else:
             attempts += 1
 
-def machine_off(machine_state):
-    machine_state = False
-    return machine_state
+# def machine_off():
+#     return False
 
 def get_resources():
     for item in resources:
@@ -88,7 +87,7 @@ while machine_state:
         if success:
             print(f"Making your {user_choice} now!")
             make_coffee(user_choice)
-            time.sleep(2)
+            time.sleep(5)
         else:
             print(
                 f'Insufficient funds —\n{user_choice} costs:'
