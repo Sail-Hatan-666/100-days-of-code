@@ -1,7 +1,7 @@
 from coffee_data import *
 import time
 
-def admin_panel(machine_state):
+def admin_panel():
     attempts = 0
     while attempts < 3:
         
@@ -14,18 +14,16 @@ def admin_panel(machine_state):
             ).lower()
 
             if admin_input == "off":
-               machine_state = False
+                state = False
+                return state, refill
 
             if admin_input == "resources":
                 get_resources()
 
             if admin_input == "refill":
-                pass
+                return 
         else:
             attempts += 1
-
-# def machine_off():
-#     return False
 
 def get_resources():
     for item in resources:
@@ -33,24 +31,24 @@ def get_resources():
         print(resource_output)
 
 
-def process_payment(pennies, 
+def process_payment(user_choice,
+                    pennies, 
                     nickels, 
                     dimes, 
-                    quarters, 
-                    user_choice):
+                    quarters 
+                    ):
     drink_cost = MENU[user_choice]["cost"]
     total = (pennies * .01) + (nickels * .05) + (dimes * .1) + (quarters * .25)
     change = total - drink_cost
     if total < drink_cost:
         return False, total, change
-    else:    
-        profit + drink_cost
+    else:
         return True, total, change
 
 
 def make_coffee(user_choice):
-    for item, amount in MENU[user_choice]["ingredients"].items():
-        resources[item] -= amount
+    for ingredient, value in MENU[user_choice]["ingredients"].items():
+        resources[ingredient] -= value
 
 
 machine_state = True
@@ -61,8 +59,9 @@ while machine_state:
         "What would you like to drink (espresso/latte/cappuccino):\n"
         ).lower()
 
-    if user_choice == "admin":
-        admin_panel(machine_state)
+    if user_choice == "admin":        
+        admin_panel()
+    
     
     if user_choice in MENU:
         print(
@@ -76,21 +75,22 @@ while machine_state:
         quarters = int(input("How many quarters?:\n"))
 
         # Splits the return value of process_payment into usable integers
-        success, total, change = process_payment(
+        success, total, change= process_payment(
+            user_choice,
             pennies, 
             nickels, 
             dimes, 
-            quarters, 
-            user_choice
+            quarters
             )
-        
         if success:
             print(f"Making your {user_choice} now!")
             make_coffee(user_choice)
-            time.sleep(5)
+            profit += MENU[user_choice]["cost"]
+            print(profit)
+            # time.sleep(2)
         else:
             print(
                 f'Insufficient funds —\n{user_choice} costs:'
                 f' ${MENU[user_choice]["cost"]:.2f}\n'
-                f'You inserted:\n${total:.2f}'
+                f'Refunding:\n${total:.2f}'
             )
