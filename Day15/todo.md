@@ -19,8 +19,9 @@
 #[ ] TODO Add main code to function to reprompt
 
 #[ ] TODO Return change if funds insufficient
+
 ## WANTS NOT NEEDS
 
 #[ ] TODO Implement an admin panel for off, report, and refill functionality 
 
-#[ ] TODO when prompted for drink choice, admin will input "admin" and be required to provide a password
+#[x] TODO when prompted for drink choice, admin will input "admin" and be required to provide a password

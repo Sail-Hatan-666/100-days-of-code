@@ -32,7 +32,7 @@ def admin_panel():
 
 def get_resources():
     for item in resources:
-        resource_output = f"{item}: {resources[item]}\n"
+        resource_output = f"{item}: {resources[item]}"
         print(resource_output)
 
 
@@ -54,6 +54,9 @@ def process_payment(user_choice,
 def make_coffee(user_choice):
     for ingredient, value in MENU[user_choice]["ingredients"].items():
         resources[ingredient] -= value
+        if resources[ingredient] <= 0:
+            print(f"Contact admin, out of {resources.items()}")
+    # TODO add logic for cancelling the order if resources are insufficient cause this ain't it lmfao
 
 
 machine_state = True
