@@ -1,7 +1,9 @@
 from coffee_data import *
-import time
+# import time
+
 
 def admin_panel():
+
     attempts = 0
     while attempts < 3:
         
@@ -9,21 +11,24 @@ def admin_panel():
         password_prompt = int(input("Please input your admin password:\n"))
         
         if password_prompt == password and attempts < 3:
+
             admin_input = input(
             "Welcome Admin, what would you like to do? off/refill/resources"
             ).lower()
 
             if admin_input == "off":
                 state = False
-                return state, refill
+                return state
 
             if admin_input == "resources":
-                get_resources()
+                return resources
 
             if admin_input == "refill":
-                return 
+                pass
+            
         else:
             attempts += 1
+
 
 def get_resources():
     for item in resources:
@@ -60,8 +65,11 @@ while machine_state:
         ).lower()
 
     if user_choice == "admin":        
-        admin_panel()
-    
+        admin_choice = admin_panel()
+        if not admin_choice:
+            machine_state = False
+        if admin_choice == resources:
+            get_resources()
     
     if user_choice in MENU:
         print(
