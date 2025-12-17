@@ -1,6 +1,5 @@
 from coffee_data import *
-import coffee_data
-# import time
+import time
 
 
 def admin_panel():
@@ -25,9 +24,10 @@ def admin_panel():
             attempts += 1
 
 
-def get_resources():
+def get_resources(profit):
     for item in resources:
-        print(f"{item}: {resources[item]}")
+        print(f"{item}: {resources[item]}ml")
+    print(f"profit: ${profit:.2f}")
 
 
 def process_payment(user_choice,
@@ -46,14 +46,13 @@ def process_payment(user_choice,
 
 
 def make_coffee(user_choice):
-    global profit
     ingredients = MENU[user_choice]["ingredients"]
     for ingredient, value in ingredients.items():
         if resources[ingredient] < value:
-            return f"We are out of {ingredient}, please contact the admin to refill."
+            return False
         else:
             resources[ingredient] -= value
-            profit += MENU[user_choice]["cost"]
+            return True
 
 
 machine_state = True
@@ -69,10 +68,8 @@ while machine_state:
         if not admin_choice:
             machine_state = False
         if admin_choice == resources:
-            # ingredient_value = get_resources()
-            get_resources()
-            print(f"profit: ${coffee_data.profit:.2f}")
-            # print(profit)
+            get_resources(profit)
+            # print(f"profit: ${profit:.2f}")
             
     
     if user_choice in MENU:
@@ -86,18 +83,22 @@ while machine_state:
         dimes = int(input("How many dimes?:\n"))
         quarters = int(input("How many quarters?:\n"))
 
-        # Splits the return value of process_payment into usable integers
-        success, total, change= process_payment(
+        # Splits the return value of process_payment() into usable integers
+        approved, total, change = process_payment(
             user_choice,
             pennies, 
             nickels, 
             dimes, 
             quarters
             )
-        if success:
-            print(f"Making your {user_choice} now!")
-            make_coffee(user_choice)
-            # time.sleep(2)
+        if approved:
+            success = make_coffee(user_choice)
+            if success:
+                profit += MENU[user_choice]["cost"]
+                print(f"Making your {user_choice} now!")
+                time.sleep(2)
+            else:
+                print("Insufficient ingredients, please contact the Admin")
         else:
             print(
                 f'Insufficient funds —\n{user_choice} costs:'
