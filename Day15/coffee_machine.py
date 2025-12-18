@@ -2,42 +2,35 @@ from coffee_data import *
 import time
 
 
-def admin_panel():
-    """
-    
-    """
-
+def admin_panel(profit):
     attempts = 0
     while attempts < 3:
 
         authorized_user = "ryan"
         password = 1234
-        username = input("")
-        password_prompt = int(input("Please input your admin password:\n"))
+        username = input("Please enter your username:\n")
+        password_prompt = int(input("Please input your password:\n"))
         
         if username == authorized_user and password_prompt == password and attempts < 3:
-            admin_input = input(
-            "Welcome Admin, what would you like to do? off/refill/resources: \n"
-            ).lower()
-            if admin_input == "off":
-                state = False
-                return state
-            if admin_input == "resources":
-                return "resources"
-            if admin_input == "refill":
-                return "refill"
+            logged_in = True
+            while logged_in:
+                admin_input = input(
+                "Welcome Admin, what would you like to do? off/refill/resources/exit: \n"
+                ).lower()
+                if admin_input == "off":
+                    return "off"
+                elif admin_input == "resources":
+                        for item in resources:
+                            print(f"{item}: {resources[item]}ml")
+                        print(f"profit: ${profit:.2f}")
+                elif admin_input == "refill":
+                    resources["water"] = 300
+                    resources["milk"] = 200
+                    resources["coffee"] = 100
+                elif admin_input == "exit":
+                    return "exit"
         else:
             attempts += 1
-
-
-def get_resources(profit):
-    for item in resources:
-        print(f"{item}: {resources[item]}ml")
-    print(f"profit: ${profit:.2f}")
-
-
-def refill_machine():
-    pass
 
 
 def process_payment(user_choice,
@@ -68,20 +61,16 @@ def make_coffee(user_choice):
 machine_state = True
 
 while machine_state:
-
     user_choice = input(
         "What would you like to drink (espresso/latte/cappuccino):\n"
         ).lower()
 
-    if user_choice == "admin":        
-        admin_choice = admin_panel()
-        if not admin_choice:
+    if user_choice == "admin":
+        status = admin_panel(profit)  
+        if status == "off":
             machine_state = False
-        if admin_choice == "resources":
-            get_resources(profit)
-        if admin_choice == "refill":
-            refill_machine()
-            
+        elif status == "exit":
+            continue   
     
     if user_choice in MENU:
         print(
@@ -108,11 +97,21 @@ while machine_state:
                 profit += MENU[user_choice]["cost"]
                 print(f"Making your {user_choice} now!")
                 time.sleep(2)
+                print(
+                    f"Dispensing change:\n${change:.2f}\n"
+                    f"Please enjoy your drink!"
+                    )
             else:
-                print("Insufficient ingredients, please contact the Admin")
+                print(
+                    f"Insufficient ingredients, please contact the Admin\n"
+                    f"Refunding:\n${total:.2f}"
+                    )
+                
         else:
             print(
                 f'Insufficient funds —\n{user_choice} costs:'
                 f' ${MENU[user_choice]["cost"]:.2f}\n'
                 f'Refunding:\n${total:.2f}'
             )
+    else:
+        print("Invalid drink option...")
