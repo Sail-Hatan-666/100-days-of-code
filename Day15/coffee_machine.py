@@ -3,13 +3,19 @@ import time
 
 
 def admin_panel():
+    """
+    
+    """
+
     attempts = 0
     while attempts < 3:
 
+        authorized_user = "ryan"
         password = 1234
+        username = input("")
         password_prompt = int(input("Please input your admin password:\n"))
         
-        if password_prompt == password and attempts < 3:
+        if username == authorized_user and password_prompt == password and attempts < 3:
             admin_input = input(
             "Welcome Admin, what would you like to do? off/refill/resources: \n"
             ).lower()
@@ -17,9 +23,9 @@ def admin_panel():
                 state = False
                 return state
             if admin_input == "resources":
-                return resources
+                return "resources"
             if admin_input == "refill":
-                pass
+                return "refill"
         else:
             attempts += 1
 
@@ -28,6 +34,10 @@ def get_resources(profit):
     for item in resources:
         print(f"{item}: {resources[item]}ml")
     print(f"profit: ${profit:.2f}")
+
+
+def refill_machine():
+    pass
 
 
 def process_payment(user_choice,
@@ -67,9 +77,10 @@ while machine_state:
         admin_choice = admin_panel()
         if not admin_choice:
             machine_state = False
-        if admin_choice == resources:
+        if admin_choice == "resources":
             get_resources(profit)
-            # print(f"profit: ${profit:.2f}")
+        if admin_choice == "refill":
+            refill_machine()
             
     
     if user_choice in MENU:
